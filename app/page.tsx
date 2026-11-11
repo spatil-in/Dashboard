@@ -1,13 +1,9 @@
 
-
 export default function Home() {
   return (
-    <>
-
-      <main>
-        <h1>Welcome to Next.js</h1>
-        <p>This is my home page.</p>
-      </main>
-    </>
+    <section>
+      <h1>Welcome to My Dashboard</h1>
+      <p>This is the home page content.</p>
+    </section>
   );
 }

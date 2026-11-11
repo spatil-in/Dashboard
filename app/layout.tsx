@@ -14,10 +14,10 @@ export default function RootLayout({
       <body>
         <Header />
 
-        <div className="main-layout">
+        <div className="main-layout flex min-h-screen gap-6">
           <Sidebar />
 
-          <main className="main-content">
+          <main className="main-content w-full p-3">
             {children}
           </main>
         </div>
