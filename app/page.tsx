@@ -1,9 +1,9 @@
-
-export default function Home() {
-  return (
-    <section>
-      <h1>Welcome to My Dashboard</h1>
-      <p>This is the home page content.</p>
-    </section>
-  );
+function Home() {
+  return ( 
+    <>
+    <h1>Welcome to Dashborad</h1>
+    </>
+   );
 }
+
+export default Home;
