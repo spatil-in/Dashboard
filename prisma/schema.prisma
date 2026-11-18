@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client"
   output   = "../generated/prisma"
@@ -9,8 +8,146 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
+  id           Int       @id @default(autoincrement())
+  name         String
+  email        String    @unique
+  createdAt    DateTime  @default(now())
+  topics       Json?
+  passwordHash String?   @db.VarChar(255)
+  bio          String?   @db.VarChar(500)
+  specialty    String?   @db.VarChar(150)
+  isAuthor     Boolean   @default(false)
+  sessions     Session[]
+  posts        Post[]
+  bookmarks    Bookmark[]
+  reactions    Reaction[]
+  comments     Comment[]
+  following    Follow[]  @relation("Follower")
+  followers    Follow[]  @relation("Following")
+  votes        Vote[]
+  submissions  Submission[]
+}
+
+model Session {
+  id        String   @id @db.VarChar(64)
+  userId    Int
+  expiresAt DateTime
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model AuthThrottle {
+  key       String   @id @db.VarChar(64)
+  attempts  Int      @default(0)
+  expiresAt DateTime
+}
+
+model Post {
+  id           Int        @id @default(autoincrement())
+  slug         String     @unique @db.VarChar(191)
+  title        String     @db.VarChar(255)
+  excerpt      String     @db.Text
+  body         String     @db.LongText
+  category     String     @db.VarChar(50)
+  imageUrl     String?    @db.VarChar(500)
+  company      String?    @db.VarChar(191)
+  mediaUrl     String?    @db.VarChar(500)
+  tags         Json
+  published    Boolean    @default(true)
+  publishedAt  DateTime   @default(now())
+  authorId     Int
+  readCount    Int        @default(0)
+  eventDate    DateTime?
+  location     String?    @db.VarChar(191)
+  participants Int        @default(0)
+  sortOrder    Int        @default(0)
+  author       User       @relation(fields: [authorId], references: [id])
+  bookmarks    Bookmark[]
+  reactions    Reaction[]
+  comments     Comment[]
+  @@index([category, published, sortOrder])
+}
+
+model Bookmark {
+  userId    Int
+  postId    Int
   createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  @@id([userId, postId])
+  @@index([postId])
+}
+
+model Reaction {
+  userId Int
+  postId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post   Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  @@id([userId, postId])
+  @@index([postId])
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  body      String   @db.Text
+  createdAt DateTime @default(now())
+  userId    Int
+  postId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  @@index([postId, createdAt])
+}
+
+model Follow {
+  followerId  Int
+  followingId Int
+  follower    User @relation("Follower", fields: [followerId], references: [id], onDelete: Cascade)
+  following   User @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
+  @@id([followerId, followingId])
+  @@index([followingId])
+}
+
+model Subscription {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique @db.VarChar(191)
+  createdAt DateTime @default(now())
+}
+
+model Poll {
+  id       Int          @id @default(autoincrement())
+  question String       @db.VarChar(255)
+  active   Boolean      @default(true)
+  options  PollOption[]
+}
+
+model PollOption {
+  id     Int    @id @default(autoincrement())
+  label  String @db.VarChar(150)
+  pollId Int
+  poll   Poll   @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  votes  Vote[]
+  @@index([pollId])
+}
+
+model Vote {
+  userId   Int
+  pollId   Int
+  optionId Int
+  user     User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  option   PollOption @relation(fields: [optionId], references: [id], onDelete: Cascade)
+  @@id([userId, pollId])
+  @@index([optionId])
+}
+
+model Submission {
+  id        Int      @id @default(autoincrement())
+  title     String   @db.VarChar(255)
+  body      String   @db.LongText
+  category  String   @db.VarChar(50)
+  status    String   @default("pending") @db.VarChar(25)
+  createdAt DateTime @default(now())
+  authorId  Int
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  @@index([authorId, createdAt])
 }

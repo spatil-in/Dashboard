@@ -3,10 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --port 3001",
     "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
+    "start": "next start --port 3001",
+    "lint": "eslint",
+    "db:generate": "prisma generate --config prisma7.config.ts",
+    "db:migrate": "prisma migrate deploy --config prisma7.config.ts",
+    "db:seed": "node scripts/seed.cjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",
@@ -30,6 +33,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "^15.5.29",
+    "jiti": "^2.7.0",
     "prisma": "^7.10.1",
     "tailwindcss": "^4",
     "typescript": "^5"

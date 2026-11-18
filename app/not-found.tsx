@@ -1,32 +1,14 @@
-
-import Link from "next/link";
-import { Home, ArrowLeft } from "lucide-react";
+﻿import Link from "next/link";
 
 export default function NotFound() {
   return (
-    <div className="flex min-h-[70vh] flex-col items-center justify-center px-6 text-center">
-
-      <h1 className="text-8xl font-extrabold tracking-tight text-blue-600 md:text-9xl">
-        404
-      </h1>
-
-      <h2 className="mt-4 text-2xl font-bold text-gray-900 md:text-3xl">
-        Page Not Found
-      </h2>
-
-      <p className="mt-3 max-w-md text-sm leading-6 text-gray-500 md:text-base">
-        Sorry, the page you are looking for doesn't exist
-        or has been moved.
-      </p>
-
-      <Link
-        href="/"
-        className="mt-8 inline-flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-3 text-sm font-medium text-white transition hover:bg-blue-700"
-      >
-        <Home size={18} />
-        Back to Home
+    <div className="simple-page empty-state">
+      <span className="dialog-eyebrow">404 / PAGE NOT FOUND</span>
+      <h1>This story has moved on.</h1>
+      <p>Explore the community to find your next great read.</p>
+      <Link href="/" className="button green">
+        Back to home
       </Link>
-
     </div>
   );
 }
